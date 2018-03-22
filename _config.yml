@@ -4,18 +4,16 @@
 # Site settings
 title: Leadomise
 description: |
-  Automatyczne narzędzie  
-  wspomagające proces optymalizacji  
-  związków wiodących
-owner: TherVira # or company name
-email: hello@thervira.com
+  Zintegrowany system informatyczny <br /> wykorzystujący metody sztucznej inteligencji <br /> do automatycznej optymalizacji kandydatów na nowe leki
+owner: Politechnika Warszawska # or company name
+email: k.kaminska@tele.pw.edu.pl
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://leadomise.com" # the base hostname & protocol for your site
 social:
-  twitter: https://twitter.com/thervira
-  github: https://github.com/thervira
+  #twitter: https://twitter.com/thervira
+  #github: https://github.com/thervira
   #linkedin-square: https://linkedin.com/in/<username>
-  facebook-official: https://facebook.com/thervira
+  #facebook-official: https://facebook.com/thervira
   #google-plus-square: https://plus.google.com/u/0/+<username>
   #email: /contact/
   #flickr:
