@@ -1,43 +1,11 @@
-<!DOCTYPE html>
-<!--
-  Original Design: Spectral by HTML5 UP
-    html5up.net | @n33co
-    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-  Jekyll build mod
--->
-<html>
-
-  <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Leadomise</title>
-  <meta name="description" content="Zintegrowany system informatyczny <br /> wykorzystujący metody sztucznej inteligencji <br /> do automatycznej optymalizacji kandydatów na nowe leki
-">
-  <!--[if lte IE 8]><script src="/js/ie/html5shiv.js"></script><![endif]-->
-  <link rel="canonical" href="http://localhost:4000/">
-  <link rel="stylesheet" href="/css/main.css" />
-  <!--[if lte IE 8]><link rel="stylesheet" href="/css/ie8.css" /><![endif]-->
-  <!--[if lte IE 9]><link rel="stylesheet" href="/css/ie9.css" /><![endif]-->
-  <link rel="alternate" type="application/rss+xml" title="Leadomise" href="http://localhost:4000/feed.xml">
-</head>
-
-
-  <body class="landing">
-
-    <!-- Page Wrapper -->
-    <div id="page-wrapper">
-
-      <!-- Header -->
-<header id="header" class="alt">
-  <h1><a href="/index.html">Leadomise</a></h1>
-</header>
-
-
-      				<!-- Banner -->
+---
+layout: landing
+---
+				<!-- Banner -->
 					<section id="banner">
 						<div class="inner">
-							<h2>Leadomise</h2>
-							<p>Zintegrowany system informatyczny <br /> wykorzystujący metody sztucznej inteligencji <br /> do automatycznej optymalizacji kandydatów na nowe leki</p>
+							<h2>{{ site.title }}</h2>
+							<p>{{ site.description | smartify }}</p>
 							<ul class="actions">
 							</ul>
 						</div>
@@ -96,44 +64,3 @@
 							</header>
 						</div>
 					</section>
-
-
-      <!-- Footer -->
-<footer id="footer">
-  <ul class="icons">
-
-  </ul>
-  <ul class="copyright">
-    <li>&copy;
-
-    2018
-    Politechnika Warszawska</li>
-    <li>Szablon: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
-  </ul>
-</footer>
-
-
-      <!-- Scripts -->
-<script src="/js/jquery.min.js"></script>
-<script src="/js/jquery.scrollex.min.js"></script>
-<script src="/js/jquery.scrolly.min.js"></script>
-<script src="/js/skel.min.js"></script>
-<script src="/js/util.js"></script>
-<!--[if lte IE 8]><script src="/js/ie/respond.min.js"></script><![endif]-->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116209527-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-116209527-1');
-</script>
-<script src="/js/main.js"></script>
-
-
-    </div>
-
-  </body>
-
-</html>
