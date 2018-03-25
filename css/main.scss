@@ -506,7 +506,7 @@ $baseurl: '{{ site.baseurl }}/images';
 /* Image */
 
 	.image {
-		display: inline;
+		display: inline-block;
 
 		img {
 			margin: inherit;
