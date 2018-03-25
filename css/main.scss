@@ -509,10 +509,12 @@ $baseurl: '{{ site.baseurl }}/images';
 		display: inline;
 
 		img {
-			margin: 2em;
-
+			margin: inherit;
+			max-width: 100%;
 		}
-
+		&.logos {
+			margin: 2em;
+		}
 		&.left {
 			float: left;
 			margin: 0 2em 2em 0;
