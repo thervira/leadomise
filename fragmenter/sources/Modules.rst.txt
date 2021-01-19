@@ -1,0 +1,18 @@
+Documentation for the Code
+**************************
+
+.. toctree::
+   :maxdepth: 1
+   
+   modules/MainWindow
+   modules/Fragmenter
+   modules/DataFrameModel
+   modules/CreatePlot
+
+
+
+
+
+
+
+

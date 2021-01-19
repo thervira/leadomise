@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fragmenter Tools’s GUI &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../static/documentation_options.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BRICS Fragmentation" href="Fragmenter.html" />
+    <link rel="prev" title="Documentation for the Code" href="../Modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Fragmenter.html" title="BRICS Fragmentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Modules.html" title="Documentation for the Code"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Modules.html" accesskey="U">Documentation for the Code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-MainWindow">
+<span id="fragmenter-tools-s-gui"></span><h1>Fragmenter Tools’s GUI<a class="headerlink" href="#module-MainWindow" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-pyqt5-gui-for-leadomise-fragmenter-tool">
+<h2>The PyQt5 GUI for LEADOMISE - Fragmenter Tool<a class="headerlink" href="#the-pyqt5-gui-for-leadomise-fragmenter-tool" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="MainWindow.MainWindow">
+<em class="property">class </em><code class="sig-prename descclassname">MainWindow.</code><code class="sig-name descname">MainWindow</code><a class="reference internal" href="../modules/MainWindow.html#MainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>MainWindow comprises of four main group boxes:
+- Settings Group Box (for fragmentation set up),
+- Tab Widget (for dataframe with generated fragments for both input file fragments and database fragments),
+- Plot Options Group Box (with options to create plots),
+- Plot Box (with canvas for created plot).</p>
+<p>Additionally, there are:
+- Rules Group box (for database customization) and
+- Similarity Search Group Box (for searching similar fragments).</p>
+<dl class="method">
+<dt id="MainWindow.MainWindow.about">
+<code class="sig-name descname">about</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.about"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.about" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information about the tool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.buttonSelected">
+<code class="sig-name descname">buttonSelected</code><span class="sig-paren">(</span><em class="sig-param">button</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.buttonSelected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.buttonSelected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks selected RadioButton (input fragments/database fragments) and set up correct dataframe to
+plotDataFrame.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createMenu">
+<code class="sig-name descname">createMenu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createMenu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createMenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Menu of the main window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createPlotBox">
+<code class="sig-name descname">createPlotBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createPlotBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createPlotBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group Box with empty plot canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createPlotOptionsGroupBox">
+<code class="sig-name descname">createPlotOptionsGroupBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createPlotOptionsGroupBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createPlotOptionsGroupBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group Box with plot options.</p>
+<p>Select plot type, plot data (input file fragments or database fragments) - x, y axis.</p>
+<p>For histogram plots only: choose number of bins.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createRulesBox">
+<code class="sig-name descname">createRulesBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createRulesBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createRulesBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rules for customized fragmentation:</p>
+<p>min fragment size,
+range of molecular weight,
+range of hydrogen bond acceptors,
+range of hydrogen bond donors,
+range of clogP,
+range of charge,
+range of heavy atoms,
+range of TPSA,
+range of rotatable bonds</p>
+<p>Check box for adding fragments to MySQL database (default: unchecked).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createSearchFragmentsBox">
+<code class="sig-name descname">createSearchFragmentsBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createSearchFragmentsBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createSearchFragmentsBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group Box for similarity search (part of Settings Group Box).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createSettingsGroupBox">
+<code class="sig-name descname">createSettingsGroupBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createSettingsGroupBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createSettingsGroupBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group Box with settings for fragmentation process.</p>
+<p>Main Group box: file selection and MYSQL username and password information.
+Subgroup box: options for customized database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createTabWidget">
+<code class="sig-name descname">createTabWidget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createTabWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createTabWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group Box with tab widget for input file fragments and database fragments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.createTabsForResults">
+<code class="sig-name descname">createTabsForResults</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.createTabsForResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.createTabsForResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates tabs with search results for input fragments and database fragments.
+Tabs are shown after search.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.databaseFragments">
+<code class="sig-name descname">databaseFragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.databaseFragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.databaseFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the mysql username and password and connects to the mysql database. Then generates the pandas
+dataframe for the fragments stored in that database.</p>
+<p>It will not run if ‘add to database’ checkbox is not selected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.documentation">
+<code class="sig-name descname">documentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.documentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.documentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation of the fragmenting tool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.initUI">
+<code class="sig-name descname">initUI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.initUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.initUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>InitUI with main layout containing the main group boxes.
+It sets the main window title and its size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.inputFragments">
+<code class="sig-name descname">inputFragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.inputFragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.inputFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates pandas dataframe for fragments from the input file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.noFileSelected">
+<code class="sig-name descname">noFileSelected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.noFileSelected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.noFileSelected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Throws an error message for lack of the selected input file for fragmentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.noMySQLInfo">
+<code class="sig-name descname">noMySQLInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.noMySQLInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.noMySQLInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Throws an error message for lack of information for MySQL database (username or password).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.openFileNameDialog">
+<code class="sig-name descname">openFileNameDialog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.openFileNameDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.openFileNameDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the file dialog to select the input file for fragmentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.plotFragmentsData">
+<code class="sig-name descname">plotFragmentsData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.plotFragmentsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.plotFragmentsData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a plot based on the selected options.</p>
+<dl class="simple">
+<dt>:param setPlotType</dt><dd><p>selected plot type</p>
+</dd>
+<dt>:param setXAxis</dt><dd><p>selected dataframe column for x axis</p>
+</dd>
+<dt>:param setYAxis</dt><dd><p>selected dataframe column for y axis</p>
+</dd>
+<dt>:param numBins (optional)</dt><dd><p>number of bins for histogram plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.saveFileDialog_databaseCSV">
+<code class="sig-name descname">saveFileDialog_databaseCSV</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.saveFileDialog_databaseCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.saveFileDialog_databaseCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves database fragments as CSV file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.saveFileDialog_databaseSDF">
+<code class="sig-name descname">saveFileDialog_databaseSDF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.saveFileDialog_databaseSDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.saveFileDialog_databaseSDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves database fragments as SDF.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.saveFileDialog_inputCSV">
+<code class="sig-name descname">saveFileDialog_inputCSV</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.saveFileDialog_inputCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.saveFileDialog_inputCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves input fragments as CSV file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.saveFileDialog_inputSDF">
+<code class="sig-name descname">saveFileDialog_inputSDF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.saveFileDialog_inputSDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.saveFileDialog_inputSDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves input fragments as SDF.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.searchSimilarFragments">
+<code class="sig-name descname">searchSimilarFragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.searchSimilarFragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.searchSimilarFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for similar fragments within both input file and database fragments
+based on the provided SMILES template.</p>
+<p>Dummy atoms from the provided SMILES template are not considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smilesTemplate</strong> – str
+SMILES string for similarity search</p></li>
+<li><p><strong>minTanimoto</strong> – float
+minimun Tanimoto similarity</p></li>
+<li><p><strong>maxTanimoto</strong> – float
+maximum Tanimoto similarity</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shows inputResults_model: dataframe</dt><dd><p>dataframe with similarity results withing input file fragments</p>
+</dd>
+<dt>Shows databseResults_model: dataframe</dt><dd><p>dataframe with similarity results withing database fragments</p>
+</dd>
+</dl>
+<p>Result dataframes are shown in two additional tab widgets added to self.tabWidget</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.startFragmentation">
+<code class="sig-name descname">startFragmentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.startFragmentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.startFragmentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the Fragmenter using the input file
+( and username and password for MySQL only if ‘add to database check box is checked in),
+as well as user-defined options for customized database.</p>
+<blockquote>
+<div><p>Shows database fragments table only if the box addToDatabase is checked in when running the fragmentation.
+Otherwise input fragments will not be uploaded into database and database dataframe will not be shown.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.tutorial">
+<code class="sig-name descname">tutorial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.tutorial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.tutorial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tutorial of the fragmenting tool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MainWindow.MainWindow.wrongMySQLPassword">
+<code class="sig-name descname">wrongMySQLPassword</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/MainWindow.html#MainWindow.wrongMySQLPassword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MainWindow.MainWindow.wrongMySQLPassword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Throws dialog in GUI that Username and Password are incorrect.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fragmenter Tools’s GUI</a><ul>
+<li><a class="reference internal" href="#the-pyqt5-gui-for-leadomise-fragmenter-tool">The PyQt5 GUI for LEADOMISE - Fragmenter Tool</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Modules.html"
+                        title="previous chapter">Documentation for the Code</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Fragmenter.html"
+                        title="next chapter">BRICS  Fragmentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/modules/MainWindow.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Fragmenter.html" title="BRICS Fragmentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Modules.html" title="Documentation for the Code"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Modules.html" >Documentation for the Code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+Getting Started with LEADOMISE FRAGMENTER TOOL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Introduction
+************
+
+To generate fragments LEADOMISE - Fragmenter Tool is using BRICS method [#f1]_, 
+which is implemented in RDKit: (https://www.rdkit.org). 
+The fragments can be uploaded to MySQL databse (https://www.mysql.com).
+
+
+Setting Up Fragmentation
+************************
+
+User can either fragment the input molecule(s) with default settings or 
+can use advanced settings to define the rules of fragmentation process. 
+The second way allows to create customized fragment sets with variety of 
+sizes and properties. 
+
+Optionally, the output fragments can be further added to MySQL database. 
+
+.. figure:: images/emptywindow.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool window.
+ 
+
+Simple Fragmentation
+====================
+
+Molecules can be fragmented by providing the input file in the 'Select Input File'
+window and then pressing 'START' button. This uses the default settings for the 
+output fragments.
+
+.. figure:: images/simplefragmentation.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - setting up simple fragmentation.
+  
+
+Customized Fragmentation
+========================
+
+The generated fragments can vary in size (by changing the min Fragment Size) and 
+multiple properties.
+This include range of:
+- molecular weight
+- hydrogen bonds acceptors
+- hydrogen bonds donors
+- heavy atoms
+- TPSA
+- charge
+- rotatable bonds
+- clogP 
+
+.. figure:: images/settings.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - setting up customized fragmentation.
+  
+
+
+Adding Fragments to Database
+============================
+
+The molecular fragments can be added automatically to the MySQL database if 
+box 'add to database' is checked in. This assumes that the user provides
+username and password to MySQL.  
+
+The database 'fragments' and table 'fragments' is then created (if it does not exit
+already) and all the fragments are uploaded to it. The whole database is also shown 
+in 'Database Fragments' in results tab. Only molecules with unique SMILES are stored.
+
+.. figure:: images/addtodatabase.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - adding generated fragments to the database.
+ 
+
+
+Search the Database
+*******************
+
+Both input fragments and database fragments can be searched to find similar structures. 
+To do that, user should provide the SMILES and range of Similarity Tanimoto.
+
+
+.. figure:: images/searchinput.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - searching for similar fragments within input file fragments.
+
+.. figure:: images/searchdatabase.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - searching for similar fragments within database fragments.
+
+Analyzing the data
+******************
+
+User can analyze the generated fragments by plotting various properties. 
+For now, line, scatter and histogram plots can be created. 
+
+Histogram plot
+==============
+
+To plot histogram, select 'histogram' in 'plot type' box and change the number of bins (default: 10).
+
+Choose the property for analysis only for X axis (e.g. molecular weight).
+
+Check in either 'input fragments' or 'database fragments' depending which data you wish you plot and 
+press 'Plot the Data'. 
+
+The plot can be saved by clicking the save icon. 
+
+.. figure:: images/histogram.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - Plotting histogram.
+
+Scatter Plot
+============
+To make scatter plot, select 'scatter' in 'plot type' box.
+
+Choose the property for analysis for both X and Y axis (e.g. molecular weight and heavy atoms).
+
+Check in either 'input fragments' or 'database fragments' depending which data you wish you plot and 
+press 'Plot the Data'. 
+
+The plot can be saved by clicking the save icon. 
+
+.. figure:: images/scatter.png
+   :align: center
+   :scale: 50 %
+   
+   LEADOMISE - Fragmenter Tool - Creating scatter plot.
+  
+
+Line Plot
+=========
+To make line plot, select 'line' in 'plot type' box.
+
+Choose the property for analysis for both X and Y axis (e.g. molecular weight and heavy atoms).
+
+Check in either 'input fragments' or 'database fragments' depending which data you wish you plot and 
+press 'Plot the Data'. 
+
+The plot can be saved by clicking the save icon. 
+
+
+Saving the data
+***************
+
+User can save generated input or database fragments either in SDF or CSV format.
+
+Save Input File Fragments
+=========================
+
+This allows to save the fragments generated from the input file provided by user.
+
+In order to do that, select File>Save Input Fragments As> and then choose either SDF or CSV format.
+
+Save Database Fragments
+=======================
+
+This allows to save the fragments stored in the database.
+
+In order to do that, select File>Save Database Fragments As> and then choose either SDF or CSV format.
+
+Tutorials
+*********
+
+Here, you can access the Tutorial Cards with few usage examples of LEADOMISE FRAGMENTER TOOL.
+
+:download:`Tutorial Cards <tutorial/>`
+
+The cards are also available in folder FragmenterTool/tutorial/
+
+
+.. rubric:: Footnotes
+
+.. [#f1] Degen, J.; Wegscheid-Gerlach, C.; Zaliani, A; Rarey, M. "On the Art of Compiling and Using ‘Drug-Like’ Chemical Fragment Spaces." *ChemMedChem* **3**:1503–7 (2008).
+
+License
+*******
+
+This document is copyright (C) 2020 by Joanna Zarnecka
+
+This work is licensed under the MIT License.
+
+.. image:: images/bottom.png
+
+

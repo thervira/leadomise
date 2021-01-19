@@ -1,0 +1,5 @@
+Plot Canvas
+***********
+
+.. automodule:: CreatePlot
+    :members:

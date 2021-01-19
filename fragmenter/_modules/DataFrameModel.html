@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>DataFrameModel &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../static/documentation_options.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for DataFrameModel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Table Models for pandas dataframes. &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">pyqtSlot</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">,</span> <span class="n">QModelIndex</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="k">import</span> <span class="n">QColor</span>
+
+<span class="c1"># checks if the values are outside of the rule</span>
+<span class="n">logP_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="n">mol_weight_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">300</span>
+<span class="n">tpsa_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">60</span>
+<span class="n">rot_bonds_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="n">hba_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="n">hbd_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span>
+
+
+<span class="c1"># num_atoms_check = lambda x: 20 &gt; x &gt; 70</span>
+<span class="c1"># molar_ref_check = lambda x: 40 &gt; x &gt; 130</span>
+
+<div class="viewcode-block" id="PandasModel"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel">[docs]</a><span class="k">class</span> <span class="nc">PandasModel</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QAbstractTableModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Table Model for pandas DataFrame.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QtCore</span><span class="o">.</span><span class="n">QAbstractTableModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PandasModel.rowCount"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel.rowCount">[docs]</a>    <span class="k">def</span> <span class="nf">rowCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">QModelIndex</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PandasModel.columnCount"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel.columnCount">[docs]</a>    <span class="k">def</span> <span class="nf">columnCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">QModelIndex</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PandasModel.data"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the data into the table model.</span>
+
+<span class="sd">        It shows column 0 in the dataframe as image.</span>
+
+<span class="sd">        Checks the values with &#39;Rule of Three&#39; and sets the background of the cell</span>
+<span class="sd">        to dark yellow if the value is outside of the range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">QVariant</span><span class="p">()</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DecorationRole</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">BackgroundRole</span><span class="p">:</span>
+                    <span class="c1"># checks the value in the cell of given column and sets background to yellow if</span>
+                    <span class="c1"># the value if outside of the range of &#39;Rule of Three&#39;</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">mol_weight_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">hba_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">hbd_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellowyellow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">tpsa_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">and</span> <span class="n">rot_bonds_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">12</span> <span class="ow">and</span> <span class="n">logP_check</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">QColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">darkYellow</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">QVariant</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PandasModel.headerData"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel.headerData">[docs]</a>    <span class="nd">@pyqtSlot</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">headerData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets a headers for column and indices for row number.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Horizontal</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">section</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QVariant</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PandasModel.sort"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.PandasModel.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sorts the data in the selected column.&quot;&quot;&quot;</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">col</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layoutAboutToBeChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">order</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AscendingOrder</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layoutChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="SimpleModel"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel">[docs]</a><span class="k">class</span> <span class="nc">SimpleModel</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QAbstractTableModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Simple Table Model for pandas DataFrame. &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">QtCore</span><span class="o">.</span><span class="n">QAbstractTableModel</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SimpleModel.rowCount"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel.rowCount">[docs]</a>    <span class="k">def</span> <span class="nf">rowCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">QModelIndex</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SimpleModel.columnCount"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel.columnCount">[docs]</a>    <span class="k">def</span> <span class="nf">columnCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">QModelIndex</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SimpleModel.data"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the data into the table model.</span>
+
+<span class="sd">        It shows column 0 in the dataframe as image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QVariant</span><span class="p">()</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DecorationRole</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">QVariant</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SimpleModel.headerData"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel.headerData">[docs]</a>    <span class="nd">@pyqtSlot</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">headerData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets a headers for column and indices for row number.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Horizontal</span> <span class="ow">and</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">orientation</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Vertical</span> <span class="ow">and</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">section</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SimpleModel.sort"><a class="viewcode-back" href="../modules/DataFrameModel.html#DataFrameModel.SimpleModel.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sorts the data in the selected column.&quot;&quot;&quot;</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="n">col</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layoutAboutToBeChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">order</span> <span class="o">==</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AscendingOrder</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layoutChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

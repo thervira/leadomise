@@ -1,0 +1,43 @@
+# Installation
+
+The LEADOMISE Fragmenter Tool can be installed on Windows/Mac/Linux.
+
+## Prerequisites
+
+- python 3.6+ (http://www.python.org/) 
+- matplotlib (https://matplotlib.org/) 
+- rdkit (https://rdkit.org/)
+- MySQL (https://www.mysql.com/downloads/) 
+- MySQL python Connector (https://www.mysql.com/downloads/)
+- pandas (https://pandas.pydata.org/) 
+
+
+## Windows users 
+
+### installer
+
+
+### from binaries
+
+git clone https://gitlab/leadomise/FragmenterTool.git
+
+
+## Mac/Linux users
+
+### installer
+
+
+### from binaries
+
+git clone https://gitlab/leadomise/FragmenterTool.git
+
+
+## License
+
+This document is copyright (C) 2020 by Joanna Zarnecka
+
+This work is licensed under the MIT License.
+
+.. image:: images/bottom.png
+
+

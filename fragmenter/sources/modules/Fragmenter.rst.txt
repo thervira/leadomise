@@ -1,0 +1,15 @@
+BRICS  Fragmentation
+********************
+
+.. toctree:: 
+   :maxdepth: 1
+  
+
+.. automodule:: Fragmenter_brics
+    :members:
+
+.. automodule:: brics_fragmentation
+    :members:
+
+.. automodule:: mysql_database
+    :members:

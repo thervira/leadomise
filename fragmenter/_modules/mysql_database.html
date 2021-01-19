@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>mysql_database &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../static/documentation_options.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mysql_database</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Functions to manage MySQL database.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">rdkit</span> <span class="k">import</span> <span class="n">Chem</span>
+
+<span class="kn">import</span> <span class="nn">mysql.connector</span> <span class="k">as</span> <span class="nn">mysql</span>
+<span class="kn">from</span> <span class="nn">mysql.connector</span> <span class="k">import</span> <span class="n">errorcode</span>
+
+<span class="c1"># define the name for database and tables to check/create</span>
+
+<span class="n">DB_NAME</span> <span class="o">=</span> <span class="s1">&#39;fragments&#39;</span>
+
+<span class="n">TABLES</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">TABLES</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;CREATE TABLE `fragments` (&quot;</span>
+    <span class="s2">&quot;  `fr_id` int(11) NOT NULL AUTO_INCREMENT,&quot;</span>
+    <span class="s2">&quot;  `fragment` longtext NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `smiles` varchar(255) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `hb_acceptors` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `hb_donors` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `ring_count` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `tpsa` float(10) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `heavy_atoms` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `molecular_weight` float(10) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `aromatic_rings` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `aliphatic_rings` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `rotatable_bonds` int(11) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `charge` float(10) NOT NULL,&quot;</span>
+    <span class="s2">&quot;  `cLogP` float(10) NOT NULL ,&quot;</span>
+    <span class="s2">&quot;  UNIQUE (SMILES),&quot;</span>
+    <span class="s2">&quot;  PRIMARY KEY (`fr_id`)&quot;</span>
+    <span class="s2">&quot;) ENGINE=InnoDB&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># TABLES[&#39;molecular_cores&#39;] = (&quot;CREATE TABLE `molecular_cores`&quot;)</span>
+<span class="c1"># TODO: add the table with molecular cores</span>
+
+<span class="c1"># connect to the database fragments if it exists, if not then create it.</span>
+<span class="c1"># create a table(s) from the list TABLES if they don&#39;t exist</span>
+
+
+<div class="viewcode-block" id="create_database"><a class="viewcode-back" href="../modules/Fragmenter.html#mysql_database.create_database">[docs]</a><span class="k">def</span> <span class="nf">create_database</span><span class="p">(</span><span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Creates the database &#39;fragments&#39;. &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE </span><span class="si">{}</span><span class="s2"> DEFAULT CHARACTER SET &#39;utf8&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_NAME</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed creating database: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="connect_database"><a class="viewcode-back" href="../modules/Fragmenter.html#mysql_database.connect_database">[docs]</a><span class="k">def</span> <span class="nf">connect_database</span><span class="p">(</span><span class="n">cnx</span><span class="p">,</span> <span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Checks the database &#39;fragments&#39; and creates it if it doesn&#39;t exists. &quot;&quot;&quot;</span>
+
+    <span class="c1"># cnx = connect_mysql(username, password)</span>
+    <span class="c1"># cursor = cnx.cursor()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;USE </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_NAME</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Database </span><span class="si">{}</span><span class="s2"> does not exists.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_NAME</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_BAD_DB_ERROR</span><span class="p">:</span>
+            <span class="n">create_database</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Database </span><span class="si">{}</span><span class="s2"> created successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DB_NAME</span><span class="p">))</span>
+            <span class="n">cnx</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">DB_NAME</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_table"><a class="viewcode-back" href="../modules/Fragmenter.html#mysql_database.create_table">[docs]</a><span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Creates the table &#39;fragments&#39; if it doesn&#39;t exists. &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">TABLES</span><span class="p">:</span>
+        <span class="n">table_description</span> <span class="o">=</span> <span class="n">TABLES</span><span class="p">[</span><span class="n">table_name</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating table `</span><span class="si">{}</span><span class="s2">`: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">table_description</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_TABLE_EXISTS_ERROR</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;already exists.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="insert_data"><a class="viewcode-back" href="../modules/Fragmenter.html#mysql_database.insert_data">[docs]</a><span class="k">def</span> <span class="nf">insert_data</span><span class="p">(</span><span class="n">cnx</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">data_fragment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Inserts the calculated properties and fragments into the table `fragments` only if unique.&quot;&quot;&quot;</span>
+
+    <span class="n">add_fragment</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT IGNORE INTO `fragments` &quot;</span>
+                    <span class="s2">&quot;(fragment, smiles,&quot;</span>
+                    <span class="s2">&quot;hb_acceptors, hb_donors,&quot;</span>
+                    <span class="s2">&quot;ring_count, tpsa, heavy_atoms,&quot;</span>
+                    <span class="s2">&quot;molecular_weight, aromatic_rings,&quot;</span>
+                    <span class="s2">&quot;aliphatic_rings, rotatable_bonds, charge, &quot;</span>
+                    <span class="s2">&quot;cLogP) &quot;</span>
+                    <span class="s2">&quot;VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">add_fragment</span><span class="p">,</span> <span class="n">data_fragment</span><span class="p">)</span>
+    <span class="n">cnx</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_fragments"><a class="viewcode-back" href="../modules/Fragmenter.html#mysql_database.get_fragments">[docs]</a><span class="k">def</span> <span class="nf">get_fragments</span><span class="p">(</span><span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Gets the data from the mysql database. &quot;&quot;&quot;</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT &quot;</span>
+             <span class="s2">&quot;*&quot;</span>
+             <span class="s2">&quot;FROM `fragments`&quot;</span>
+             <span class="p">)</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">fragment</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolFromMolBlock</span><span class="p">(</span><span class="n">fragment</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

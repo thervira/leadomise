@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>BRICS Fragmentation &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../static/documentation_options.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model for DataFrame" href="DataFrameModel.html" />
+    <link rel="prev" title="Fragmenter Tools’s GUI" href="MainWindow.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataFrameModel.html" title="Model for DataFrame"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MainWindow.html" title="Fragmenter Tools’s GUI"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Modules.html" accesskey="U">Documentation for the Code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="brics-fragmentation">
+<h1>BRICS  Fragmentation<a class="headerlink" href="#brics-fragmentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-Fragmenter_brics"></span><p>BRICS Fragmenter.</p>
+<ul class="simple">
+<li><p>Fragments the input file</p></li>
+<li><p>Calculates the properties of the fragments</p></li>
+<li><p>Uploads fragments (that have properties values within provided ranges) and their properties to database</p></li>
+</ul>
+<dl class="class">
+<dt id="Fragmenter_brics.Fragmenter">
+<em class="property">class </em><code class="sig-prename descclassname">Fragmenter_brics.</code><code class="sig-name descname">Fragmenter</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">username=None</em>, <em class="sig-param">password=None</em>, <em class="sig-param">minFragmentSize=1</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/Fragmenter_brics.html#Fragmenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Fragmenter_brics.Fragmenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fragments the input molecule(s), calculates their properties
+and adds the fragments to the MySQL database called <cite>fragments</cite> and table ‘fragments’.
+If database ‘fragments’ and table ‘fragments’ does not exists, it creates them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> – str
+ligand file location to sd file</p></li>
+<li><p><strong>username</strong> – str (default: None)
+MySQL username</p></li>
+<li><p><strong>password</strong> – str (default: None)
+MySQL password</p></li>
+<li><p><strong>minFragmentSize</strong> – int (default: 1)
+min fragment size for BRICS fragmentation</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="Fragmenter_brics.Fragmenter.checkMySQLAccess">
+<code class="sig-name descname">checkMySQLAccess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/Fragmenter_brics.html#Fragmenter.checkMySQLAccess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Fragmenter_brics.Fragmenter.checkMySQLAccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check MySQL connection and connect if possible. Otherwise throw an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Fragmenter_brics.Fragmenter.fragment">
+<code class="sig-name descname">fragment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/Fragmenter_brics.html#Fragmenter.fragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Fragmenter_brics.Fragmenter.fragment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses BRICS fragmentation method to cut ligands in the input file based on
+the minFragmentSize and stores them in the set.</p>
+<p>Default minFragmentSize: 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Fragmenter_brics.Fragmenter.getDataFragments">
+<code class="sig-name descname">getDataFragments</code><span class="sig-paren">(</span><em class="sig-param">minMolWeight</em>, <em class="sig-param">maxMolWeight</em>, <em class="sig-param">minHBA</em>, <em class="sig-param">maxHBA</em>, <em class="sig-param">minHBD</em>, <em class="sig-param">maxHBD</em>, <em class="sig-param">minLogP</em>, <em class="sig-param">maxLogP</em>, <em class="sig-param">minCharge</em>, <em class="sig-param">maxCharge</em>, <em class="sig-param">minHeavyAtoms</em>, <em class="sig-param">maxHeavyAtoms</em>, <em class="sig-param">minTPSA</em>, <em class="sig-param">maxTPSA</em>, <em class="sig-param">minRotBonds</em>, <em class="sig-param">maxRotBonds</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/Fragmenter_brics.html#Fragmenter.getDataFragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Fragmenter_brics.Fragmenter.getDataFragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a set of properties for every fragment in the list based on the provided ranges.</p>
+<p>List of calculated properties:
+fr_3d - 3d coordinates of the fragment molecule,
+Smiles - Smiles of the fragment molecule,
+hba_count - Number of Hydrogen Bond Acceptors,
+hbd_count - Number of Hydrogen Bond Donors,
+ring_count - Number of Rings present in the fragment molecule,
+tpsa - Topological Polar Surface Area of the fragment molecule,
+heavy_atoms - Number of Heavy Atoms present in the fragment,
+mw - Molecular Weight of the fragment,
+aromatic_rings - Number of Aromatic Rings,
+aliphatic_rings - Number of Aliphatic Rings,
+rot_bonds - Number of Rotatable Bonds in the fragment molecule,
+charge - Charge of the fragment,
+cLogP - calculated logP (octanol-water partition coefficient)</p>
+<dl class="simple">
+<dt>:returns list</dt><dd><p>list with molecular coordinates and properties</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Fragmenter_brics.Fragmenter.upload_fragments">
+<code class="sig-name descname">upload_fragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../modules/Fragmenter_brics.html#Fragmenter.upload_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Fragmenter_brics.Fragmenter.upload_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses provided MYSQL username and password to connect to database ‘fragments and
+uploads the fragments and their properties to the database <cite>fragments</cite> and table ‘fragments’.</p>
+<p>Throws dialog with error if provided username or password are incorrect.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-brics_fragmentation"></span><dl class="function">
+<dt id="brics_fragmentation.generateFragmentLibrary">
+<code class="sig-prename descclassname">brics_fragmentation.</code><code class="sig-name descname">generateFragmentLibrary</code><span class="sig-paren">(</span><em class="sig-param">mols</em>, <em class="sig-param">minFragmentSize=1</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/brics_fragmentation.html#generateFragmentLibrary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#brics_fragmentation.generateFragmentLibrary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates set of fragments from the input file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mols</strong> – rdkit sdf supplier
+input ligands</p></li>
+<li><p><strong>minFragmentSize</strong> – int (optional)
+minimum size of the fragment (default is 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns fragmentLibrary</dt>
+<dd class="field-even"><p>set
+set of fragments generated from ligands from input file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-mysql_database"></span><p>Functions to manage MySQL database.</p>
+<dl class="function">
+<dt id="mysql_database.connect_database">
+<code class="sig-prename descclassname">mysql_database.</code><code class="sig-name descname">connect_database</code><span class="sig-paren">(</span><em class="sig-param">cnx</em>, <em class="sig-param">cursor</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/mysql_database.html#connect_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mysql_database.connect_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the database ‘fragments’ and creates it if it doesn’t exists.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mysql_database.create_database">
+<code class="sig-prename descclassname">mysql_database.</code><code class="sig-name descname">create_database</code><span class="sig-paren">(</span><em class="sig-param">cursor</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/mysql_database.html#create_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mysql_database.create_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the database ‘fragments’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mysql_database.create_table">
+<code class="sig-prename descclassname">mysql_database.</code><code class="sig-name descname">create_table</code><span class="sig-paren">(</span><em class="sig-param">cursor</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/mysql_database.html#create_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mysql_database.create_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the table ‘fragments’ if it doesn’t exists.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mysql_database.get_fragments">
+<code class="sig-prename descclassname">mysql_database.</code><code class="sig-name descname">get_fragments</code><span class="sig-paren">(</span><em class="sig-param">cursor</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/mysql_database.html#get_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mysql_database.get_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the data from the mysql database.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mysql_database.insert_data">
+<code class="sig-prename descclassname">mysql_database.</code><code class="sig-name descname">insert_data</code><span class="sig-paren">(</span><em class="sig-param">cnx</em>, <em class="sig-param">cursor</em>, <em class="sig-param">data_fragment</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/mysql_database.html#insert_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mysql_database.insert_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts the calculated properties and fragments into the table <cite>fragments</cite> only if unique.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MainWindow.html"
+                        title="previous chapter">Fragmenter Tools’s GUI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="DataFrameModel.html"
+                        title="next chapter">Model for DataFrame</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/modules/Fragmenter.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataFrameModel.html" title="Model for DataFrame"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="MainWindow.html" title="Fragmenter Tools’s GUI"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Modules.html" >Documentation for the Code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

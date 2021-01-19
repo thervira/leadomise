@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting Started with LEADOMISE FRAGMENTER TOOL &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Documentation for the Code" href="Modules.html" />
+    <link rel="prev" title="Installation" href="Installation.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Modules.html" title="Documentation for the Code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-with-leadomise-fragmenter-tool">
+<h1>Getting Started with LEADOMISE FRAGMENTER TOOL<a class="headerlink" href="#getting-started-with-leadomise-fragmenter-tool" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>To generate fragments LEADOMISE - Fragmenter Tool is using BRICS method <a class="footnote-reference brackets" href="#f1" id="id1">1</a>,
+which is implemented in RDKit: (<a class="reference external" href="https://www.rdkit.org">https://www.rdkit.org</a>).
+The fragments can be uploaded to MySQL databse (<a class="reference external" href="https://www.mysql.com">https://www.mysql.com</a>).</p>
+</div>
+<div class="section" id="setting-up-fragmentation">
+<h2>Setting Up Fragmentation<a class="headerlink" href="#setting-up-fragmentation" title="Permalink to this headline">¶</a></h2>
+<p>User can either fragment the input molecule(s) with default settings or
+can use advanced settings to define the rules of fragmentation process.
+The second way allows to create customized fragment sets with variety of
+sizes and properties.</p>
+<p>Optionally, the output fragments can be further added to MySQL database.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="images/emptywindow.png"><img alt="images/emptywindow.png" src="images/emptywindow.png" style="width: 797.5px; height: 469.5px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">LEADOMISE - Fragmenter Tool window.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="simple-fragmentation">
+<h3>Simple Fragmentation<a class="headerlink" href="#simple-fragmentation" title="Permalink to this headline">¶</a></h3>
+<p>Molecules can be fragmented by providing the input file in the ‘Select Input File’
+window and then pressing ‘START’ button. This uses the default settings for the
+output fragments.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="images/simplefragmentation.png"><img alt="images/simplefragmentation.png" src="images/simplefragmentation.png" style="width: 798.5px; height: 469.5px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - setting up simple fragmentation.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="customized-fragmentation">
+<h3>Customized Fragmentation<a class="headerlink" href="#customized-fragmentation" title="Permalink to this headline">¶</a></h3>
+<p>The generated fragments can vary in size (by changing the min Fragment Size) and
+multiple properties.
+This include range of:
+- molecular weight
+- hydrogen bonds acceptors
+- hydrogen bonds donors
+- heavy atoms
+- TPSA
+- charge
+- rotatable bonds
+- clogP</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="images/settings.png"><img alt="images/settings.png" src="images/settings.png" style="width: 460.5px; height: 81.0px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - setting up customized fragmentation.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="adding-fragments-to-database">
+<h3>Adding Fragments to Database<a class="headerlink" href="#adding-fragments-to-database" title="Permalink to this headline">¶</a></h3>
+<p>The molecular fragments can be added automatically to the MySQL database if
+box ‘add to database’ is checked in. This assumes that the user provides
+username and password to MySQL.</p>
+<p>The database ‘fragments’ and table ‘fragments’ is then created (if it does not exit
+already) and all the fragments are uploaded to it. The whole database is also shown
+in ‘Database Fragments’ in results tab. Only molecules with unique SMILES are stored.</p>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="images/addtodatabase.png"><img alt="images/addtodatabase.png" src="images/addtodatabase.png" style="width: 800.0px; height: 469.5px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - adding generated fragments to the database.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="search-the-database">
+<h2>Search the Database<a class="headerlink" href="#search-the-database" title="Permalink to this headline">¶</a></h2>
+<p>Both input fragments and database fragments can be searched to find similar structures.
+To do that, user should provide the SMILES and range of Similarity Tanimoto.</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="images/searchinput.png"><img alt="images/searchinput.png" src="images/searchinput.png" style="width: 801.5px; height: 467.0px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - searching for similar fragments within input file fragments.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="images/searchdatabase.png"><img alt="images/searchdatabase.png" src="images/searchdatabase.png" style="width: 792.5px; height: 462.0px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - searching for similar fragments within database fragments.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="analyzing-the-data">
+<h2>Analyzing the data<a class="headerlink" href="#analyzing-the-data" title="Permalink to this headline">¶</a></h2>
+<p>User can analyze the generated fragments by plotting various properties.
+For now, line, scatter and histogram plots can be created.</p>
+<div class="section" id="histogram-plot">
+<h3>Histogram plot<a class="headerlink" href="#histogram-plot" title="Permalink to this headline">¶</a></h3>
+<p>To plot histogram, select ‘histogram’ in ‘plot type’ box and change the number of bins (default: 10).</p>
+<p>Choose the property for analysis only for X axis (e.g. molecular weight).</p>
+<p>Check in either ‘input fragments’ or ‘database fragments’ depending which data you wish you plot and
+press ‘Plot the Data’.</p>
+<p>The plot can be saved by clicking the save icon.</p>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="images/histogram.png"><img alt="images/histogram.png" src="images/histogram.png" style="width: 800.5px; height: 467.5px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - Plotting histogram.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="scatter-plot">
+<h3>Scatter Plot<a class="headerlink" href="#scatter-plot" title="Permalink to this headline">¶</a></h3>
+<p>To make scatter plot, select ‘scatter’ in ‘plot type’ box.</p>
+<p>Choose the property for analysis for both X and Y axis (e.g. molecular weight and heavy atoms).</p>
+<p>Check in either ‘input fragments’ or ‘database fragments’ depending which data you wish you plot and
+press ‘Plot the Data’.</p>
+<p>The plot can be saved by clicking the save icon.</p>
+<div class="figure align-center" id="id9">
+<a class="reference internal image-reference" href="images/scatter.png"><img alt="images/scatter.png" src="images/scatter.png" style="width: 798.0px; height: 469.5px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">LEADOMISE - Fragmenter Tool - Creating scatter plot.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="line-plot">
+<h3>Line Plot<a class="headerlink" href="#line-plot" title="Permalink to this headline">¶</a></h3>
+<p>To make line plot, select ‘line’ in ‘plot type’ box.</p>
+<p>Choose the property for analysis for both X and Y axis (e.g. molecular weight and heavy atoms).</p>
+<p>Check in either ‘input fragments’ or ‘database fragments’ depending which data you wish you plot and
+press ‘Plot the Data’.</p>
+<p>The plot can be saved by clicking the save icon.</p>
+</div>
+</div>
+<div class="section" id="saving-the-data">
+<h2>Saving the data<a class="headerlink" href="#saving-the-data" title="Permalink to this headline">¶</a></h2>
+<p>User can save generated input or database fragments either in SDF or CSV format.</p>
+<div class="section" id="save-input-file-fragments">
+<h3>Save Input File Fragments<a class="headerlink" href="#save-input-file-fragments" title="Permalink to this headline">¶</a></h3>
+<p>This allows to save the fragments generated from the input file provided by user.</p>
+<p>In order to do that, select File&gt;Save Input Fragments As&gt; and then choose either SDF or CSV format.</p>
+</div>
+<div class="section" id="save-database-fragments">
+<h3>Save Database Fragments<a class="headerlink" href="#save-database-fragments" title="Permalink to this headline">¶</a></h3>
+<p>This allows to save the fragments stored in the database.</p>
+<p>In order to do that, select File&gt;Save Database Fragments As&gt; and then choose either SDF or CSV format.</p>
+</div>
+</div>
+<div class="section" id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
+<p>Here, you can access the Tutorial Cards with few usage examples of LEADOMISE FRAGMENTER TOOL.</p>
+<p><code class="xref download docutils literal notranslate"><span class="pre">Tutorial</span> <span class="pre">Cards</span></code></p>
+<p>The cards are also available in folder FragmenterTool/tutorial/</p>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Degen, J.; Wegscheid-Gerlach, C.; Zaliani, A; Rarey, M. “On the Art of Compiling and Using ‘Drug-Like’ Chemical Fragment Spaces.” <em>ChemMedChem</em> <strong>3</strong>:1503–7 (2008).</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This document is copyright (C) 2020 by Joanna Zarnecka</p>
+<p>This work is licensed under the MIT License.</p>
+<img alt="images/bottom.png" src="images/bottom.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started with LEADOMISE FRAGMENTER TOOL</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#setting-up-fragmentation">Setting Up Fragmentation</a><ul>
+<li><a class="reference internal" href="#simple-fragmentation">Simple Fragmentation</a></li>
+<li><a class="reference internal" href="#customized-fragmentation">Customized Fragmentation</a></li>
+<li><a class="reference internal" href="#adding-fragments-to-database">Adding Fragments to Database</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#search-the-database">Search the Database</a></li>
+<li><a class="reference internal" href="#analyzing-the-data">Analyzing the data</a><ul>
+<li><a class="reference internal" href="#histogram-plot">Histogram plot</a></li>
+<li><a class="reference internal" href="#scatter-plot">Scatter Plot</a></li>
+<li><a class="reference internal" href="#line-plot">Line Plot</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saving-the-data">Saving the data</a><ul>
+<li><a class="reference internal" href="#save-input-file-fragments">Save Input File Fragments</a></li>
+<li><a class="reference internal" href="#save-database-fragments">Save Database Fragments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Modules.html"
+                        title="next chapter">Documentation for the Code</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/GettingStarted.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Modules.html" title="Documentation for the Code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Installation.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

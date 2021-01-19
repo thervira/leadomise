@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fragmenter_brics &#8212; LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../static/graphviz.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../static/documentation_options.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for Fragmenter_brics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; BRICS Fragmenter.</span>
+
+<span class="sd">- Fragments the input file</span>
+<span class="sd">- Calculates the properties of the fragments</span>
+<span class="sd">- Uploads fragments (that have properties values within provided ranges) and their properties to database</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">rdkit</span> <span class="k">import</span> <span class="n">Chem</span>
+<span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="k">import</span> <span class="p">(</span><span class="n">AllChem</span><span class="p">,</span> <span class="n">Descriptors</span><span class="p">,</span> <span class="n">Lipinski</span><span class="p">,</span> <span class="n">Crippen</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="k">import</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="k">import</span> <span class="n">pyqtSlot</span>
+
+<span class="kn">import</span> <span class="nn">mysql.connector</span> <span class="k">as</span> <span class="nn">mysql</span>
+<span class="kn">from</span> <span class="nn">mysql.connector</span> <span class="k">import</span> <span class="n">errorcode</span>
+
+<span class="kn">import</span> <span class="nn">mysql_database</span>
+<span class="kn">import</span> <span class="nn">brics_fragmentation</span>
+
+
+<div class="viewcode-block" id="Fragmenter"><a class="viewcode-back" href="../modules/Fragmenter.html#Fragmenter_brics.Fragmenter">[docs]</a><span class="k">class</span> <span class="nc">Fragmenter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Fragments the input molecule(s), calculates their properties</span>
+<span class="sd">    and adds the fragments to the MySQL database called `fragments` and table &#39;fragments&#39;.</span>
+<span class="sd">    If database &#39;fragments&#39; and table &#39;fragments&#39; does not exists, it creates them.</span>
+
+<span class="sd">    :param input: str</span>
+<span class="sd">        ligand file location to sd file</span>
+<span class="sd">    :param username: str (default: None)</span>
+<span class="sd">        MySQL username</span>
+<span class="sd">    :param password: str (default: None)</span>
+<span class="sd">        MySQL password</span>
+<span class="sd">    :param minFragmentSize: int (default: 1)</span>
+<span class="sd">        min fragment size for BRICS fragmentation</span>
+
+<span class="sd">     &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minFragmentSize</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allfrags</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minFragmentSize</span> <span class="o">=</span> <span class="n">minFragmentSize</span>
+
+<div class="viewcode-block" id="Fragmenter.fragment"><a class="viewcode-back" href="../modules/Fragmenter.html#Fragmenter_brics.Fragmenter.fragment">[docs]</a>    <span class="k">def</span> <span class="nf">fragment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Uses BRICS fragmentation method to cut ligands in the input file based on</span>
+<span class="sd">        the minFragmentSize and stores them in the set.</span>
+
+<span class="sd">        Default minFragmentSize: 1</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+
+        <span class="n">in_file</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">SDMolSupplier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating fragments for the molecules in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allfrags</span> <span class="o">=</span> <span class="n">brics_fragmentation</span><span class="o">.</span><span class="n">generateFragmentLibrary</span><span class="p">(</span><span class="n">in_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minFragmentSize</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fragmenter.getDataFragments"><a class="viewcode-back" href="../modules/Fragmenter.html#Fragmenter_brics.Fragmenter.getDataFragments">[docs]</a>    <span class="k">def</span> <span class="nf">getDataFragments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minMolWeight</span><span class="p">,</span> <span class="n">maxMolWeight</span><span class="p">,</span> <span class="n">minHBA</span><span class="p">,</span> <span class="n">maxHBA</span><span class="p">,</span> <span class="n">minHBD</span><span class="p">,</span> <span class="n">maxHBD</span><span class="p">,</span> <span class="n">minLogP</span><span class="p">,</span> <span class="n">maxLogP</span><span class="p">,</span>
+                         <span class="n">minCharge</span><span class="p">,</span> <span class="n">maxCharge</span><span class="p">,</span> <span class="n">minHeavyAtoms</span><span class="p">,</span> <span class="n">maxHeavyAtoms</span><span class="p">,</span> <span class="n">minTPSA</span><span class="p">,</span> <span class="n">maxTPSA</span><span class="p">,</span> <span class="n">minRotBonds</span><span class="p">,</span>
+                         <span class="n">maxRotBonds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets a set of properties for every fragment in the list based on the provided ranges.</span>
+
+<span class="sd">         List of calculated properties:</span>
+<span class="sd">         fr_3d - 3d coordinates of the fragment molecule,</span>
+<span class="sd">         Smiles - Smiles of the fragment molecule,</span>
+<span class="sd">         hba_count - Number of Hydrogen Bond Acceptors,</span>
+<span class="sd">         hbd_count - Number of Hydrogen Bond Donors,</span>
+<span class="sd">         ring_count - Number of Rings present in the fragment molecule,</span>
+<span class="sd">         tpsa - Topological Polar Surface Area of the fragment molecule,</span>
+<span class="sd">         heavy_atoms - Number of Heavy Atoms present in the fragment,</span>
+<span class="sd">         mw - Molecular Weight of the fragment,</span>
+<span class="sd">         aromatic_rings - Number of Aromatic Rings,</span>
+<span class="sd">         aliphatic_rings - Number of Aliphatic Rings,</span>
+<span class="sd">         rot_bonds - Number of Rotatable Bonds in the fragment molecule,</span>
+<span class="sd">         charge - Charge of the fragment,</span>
+<span class="sd">         cLogP - calculated logP (octanol-water partition coefficient)</span>
+
+<span class="sd">         :returns list</span>
+<span class="sd">            list with molecular coordinates and properties</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mol_weight_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minMolWeight</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxMolWeight</span>
+        <span class="n">hba_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minHBA</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxHBA</span>
+        <span class="n">hbd_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minHBD</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxHBD</span>
+        <span class="n">logP_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minLogP</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxLogP</span>
+        <span class="n">charge_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minCharge</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxCharge</span>
+        <span class="n">heavy_atoms_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minHeavyAtoms</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxHeavyAtoms</span>
+        <span class="n">tpsa_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minTPSA</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxTPSA</span>
+        <span class="n">rotatable_bonds_check</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">minRotBonds</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxRotBonds</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allfrags</span><span class="p">:</span>
+            <span class="n">mw</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">Descriptors</span><span class="o">.</span><span class="n">MolWt</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">hba_count</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">NumHAcceptors</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">hbd_count</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">NumHDonors</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">heavy_atoms</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">HeavyAtomCount</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">aromatic_rings</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">NumAromaticRings</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">aliphatic_rings</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">NumAliphaticRings</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">rot_bonds</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">NumRotatableBonds</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">ring_count</span> <span class="o">=</span> <span class="n">Lipinski</span><span class="o">.</span><span class="n">RingCount</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">tpsa</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">Descriptors</span><span class="o">.</span><span class="n">TPSA</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+            <span class="n">charge</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">GetFormalCharge</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+
+            <span class="c1"># remove dummy atoms from molecule before calculating cLogP</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="s1">&#39;[*]&#39;</span><span class="p">)</span>
+            <span class="n">fragNoDummies</span> <span class="o">=</span> <span class="n">AllChem</span><span class="o">.</span><span class="n">DeleteSubstructs</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+
+            <span class="n">fragNoDummies</span><span class="o">.</span><span class="n">UpdatePropertyCache</span><span class="p">()</span>
+            <span class="n">Chem</span><span class="o">.</span><span class="n">rdmolops</span><span class="o">.</span><span class="n">FastFindRings</span><span class="p">(</span><span class="n">fragNoDummies</span><span class="p">)</span>
+
+            <span class="n">cLogP</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">Crippen</span><span class="o">.</span><span class="n">MolLogP</span><span class="p">(</span><span class="n">fragNoDummies</span><span class="p">)</span>
+
+            <span class="n">fr_3d</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolToMolBlock</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+
+            <span class="c1"># checker for ranges of properties and add only if True</span>
+            <span class="n">checker</span> <span class="o">=</span> <span class="p">[</span><span class="n">mol_weight_check</span><span class="p">(</span><span class="n">mw</span><span class="p">),</span> <span class="n">hba_check</span><span class="p">(</span><span class="n">hba_count</span><span class="p">),</span> <span class="n">hbd_check</span><span class="p">(</span><span class="n">hbd_count</span><span class="p">),</span>
+                       <span class="n">logP_check</span><span class="p">(</span><span class="n">cLogP</span><span class="p">),</span> <span class="n">charge_check</span><span class="p">(</span><span class="n">charge</span><span class="p">),</span> <span class="n">heavy_atoms_check</span><span class="p">(</span><span class="n">heavy_atoms</span><span class="p">),</span>
+                       <span class="n">tpsa_check</span><span class="p">(</span><span class="n">tpsa</span><span class="p">),</span> <span class="n">rotatable_bonds_check</span><span class="p">(</span><span class="n">rot_bonds</span><span class="p">)</span>
+                       <span class="p">]</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">checker</span><span class="p">):</span>
+                <span class="n">data_fragment</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">fr_3d</span><span class="p">,</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolToSmiles</span><span class="p">(</span><span class="n">frag</span><span class="p">),</span> <span class="n">hba_count</span><span class="p">,</span>
+                    <span class="n">hbd_count</span><span class="p">,</span> <span class="n">ring_count</span><span class="p">,</span> <span class="n">tpsa</span><span class="p">,</span>
+                    <span class="n">heavy_atoms</span><span class="p">,</span> <span class="n">mw</span><span class="p">,</span> <span class="n">aromatic_rings</span><span class="p">,</span>
+                    <span class="n">aliphatic_rings</span><span class="p">,</span> <span class="n">rot_bonds</span><span class="p">,</span> <span class="n">charge</span><span class="p">,</span>
+                    <span class="n">cLogP</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">all_fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_fragment</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fragments</span></div>
+
+<div class="viewcode-block" id="Fragmenter.checkMySQLAccess"><a class="viewcode-back" href="../modules/Fragmenter.html#Fragmenter_brics.Fragmenter.checkMySQLAccess">[docs]</a>    <span class="k">def</span> <span class="nf">checkMySQLAccess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check MySQL connection and connect if possible. Otherwise throw an error.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">mysql</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errorcode</span><span class="o">.</span><span class="n">ER_ACCESS_DENIED_ERROR</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Fragmenter.upload_fragments"><a class="viewcode-back" href="../modules/Fragmenter.html#Fragmenter_brics.Fragmenter.upload_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">upload_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Uses provided MYSQL username and password to connect to database &#39;fragments and</span>
+<span class="sd">            uploads the fragments and their properties to the database `fragments` and table &#39;fragments&#39;.</span>
+
+<span class="sd">            Throws dialog with error if provided username or password are incorrect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkMySQLAccess</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+            <span class="c1"># create database if not exists, use it</span>
+            <span class="n">mysql_database</span><span class="o">.</span><span class="n">connect_database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnx</span><span class="p">,</span> <span class="n">cursor</span><span class="p">)</span>
+
+            <span class="c1"># create the table if not exists</span>
+            <span class="n">mysql_database</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inserting fragments into the table `fragments`...&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">data_fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fragments</span><span class="p">:</span>
+                <span class="c1"># insert fragment with data to the table</span>
+                <span class="n">mysql_database</span><span class="o">.</span><span class="n">insert_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnx</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">data_fragment</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All fragments have been inserted successfully.&quot;</span><span class="p">)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LEADOMISE FRAGMENTER TOOL 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Joanna Zarnecka.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

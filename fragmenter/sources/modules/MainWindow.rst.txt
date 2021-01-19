@@ -1,0 +1,9 @@
+Fragmenter Tools's GUI
+********************** 
+
+.. automodule:: MainWindow
+    :members: 
+
+
+
+

@@ -1,0 +1,26 @@
+# An Overview
+
+## What is LEADOMISE FRAGMENTER TOOL?
+
+LEADOMISE - Fragmenter Tool is part of LEADOMISE suite (leadomise.com).
+It is an open source and user-friendly tool wit Graphical User Interface for fast molecular fragmentation and fragment analysis.
+
+### Web Presence
+- leadomise.com
+- GitLab (gitlab/leadomise/FragmenterTool) 
+- Tutorials (gitlab/leadomise/FragmenterTool/tutorials) 
+- Mailing List ( ??? ) 
+- Social Media:
+	- Twitter?
+	- Slack?
+	- LinkedIn?
+	- Others?
+
+## License
+This document is copyright (C) 2020 by Joanna Zarnecka
+
+This work is licensed under the MIT License.
+
+
+.. image:: images/bottom.png
+
